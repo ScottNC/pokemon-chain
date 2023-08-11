@@ -92,9 +92,17 @@ describe('getChain', () => {
     expect(chain).toEqual(expectedChainTriple);
   });
 
-  it('should error for empty evolutuon data', async () => {
+  it('should error for empty evolution data', async () => {
     (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue([]);
+
+    const species = 'grape';
+    await expect(getChain(species)).rejects.toThrow(Error);
+  });
+
+  it('should error when the API call to get the evolution data fails', async () => {
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (axios.get as jest.Mock).mockResolvedValue(new Error('Request failed'));
 
     const species = 'grape';
     await expect(getChain(species)).rejects.toThrow(Error);
