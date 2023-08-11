@@ -92,4 +92,12 @@ describe('getChain', () => {
     expect(chain).toEqual(expectedChainTriple);
   });
 
+  it('should error for empty evolutuon data', async () => {
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (axios.get as jest.Mock).mockResolvedValue([]);
+
+    const species = 'grape';
+    await expect(getChain(species)).rejects.toThrow(Error);
+  });
+
 });
