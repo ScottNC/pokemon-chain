@@ -27,10 +27,19 @@ describe('getEvolution', () => {
   it('should make the correct call to the Pokemon API', async () => {
     (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
 
-    const species = 'noodles';
+    const species = 'pizza';
     await getEvolutionURL(species);
 
-    expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/noodles');
+    expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/pizza');
+  });
+
+  it('should make the correct call to the Pokemon API when inputting a capitalised species', async () => {
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+
+    const species = 'SPAGHETTI';
+    await getEvolutionURL(species);
+
+    expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/spaghetti');
   });
 
 })
