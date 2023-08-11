@@ -8,15 +8,28 @@ export async function getChain (species: string) {
     const response: AxiosResponse = await axios.get(evolutionURL);
     const data: EvolutionChainResponse = response.data;
 
-    const { species } : EvolvesTo = data.chain;
+    const chain: EvolutionChain | null = translateChain([data.chain]);
 
-    const chain: EvolutionChain = {
-      name: species.name,
-      variations: []
-    };
+    if (!chain)
+      throw new Error('Evolution Chain is empty')
     
     return chain;
   } catch (error) {
     throw new Error('Error fetching evolution chain');
   }
+}
+
+function translateChain (chain: EvolvesTo[]) {
+  if (!chain.length) return null;
+
+  const { species, evolves_to } = chain[0];
+
+  const variations = translateChain(evolves_to);
+
+  const translatedChain: EvolutionChain = {
+    name: species.name,
+    variations: variations ? [variations] : []
+  }
+
+  return translatedChain;
 }

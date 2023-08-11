@@ -29,6 +29,30 @@ describe('getChain', () => {
     name: 'banana',
     variations: []
   }
+
+  const chainResponseDouble : { data : EvolutionChainResponse } = {
+    data: {
+      chain: {
+        evolves_to: [{
+          evolves_to: [],
+          species: {
+            name: 'grape'
+          }
+        }],
+        species: {
+          name: 'apple'
+        }
+      }
+    }
+  };
+
+  const expectedChainDouble : EvolutionChain = {
+    name: 'apple',
+    variations: [{
+      name: 'grape',
+      variations: []
+    }]
+  }
   
   it('should return a single layered chain', async () => {
     (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
@@ -38,6 +62,16 @@ describe('getChain', () => {
     const chain = await getChain(species);
 
     expect(chain).toEqual(expectedChainSingle);
+  });
+
+  it('should return a double layered chain', async () => {
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (axios.get as jest.Mock).mockResolvedValue(chainResponseDouble);
+
+    const species = 'apple';
+    const chain = await getChain(species);
+
+    expect(chain).toEqual(expectedChainDouble);
   });
 
 });
