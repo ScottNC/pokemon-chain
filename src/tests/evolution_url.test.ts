@@ -1,7 +1,7 @@
 import { POKEMON_URL } from "../config";
 import { getEvolutionURL } from "../services/evolution_url";
-import { SpeciesData } from "../types/pokemon_types";
-import axios, { AxiosError } from 'axios';
+import { SpeciesResponse } from "../types/pokemon_types";
+import axios from 'axios';
 
 jest.mock('axios');
 
@@ -11,7 +11,7 @@ describe('getEvolution', () => {
     (axios.get as jest.Mock).mockReset();
   });
 
-  const pokemonSpeciesData : { data : SpeciesData } = {
+  const pokemonSpeciesResponse : { data : SpeciesResponse } = {
     data: {
       evolution_chain : {
         url: POKEMON_URL + '/evolution-chain/12341234/'
@@ -20,7 +20,7 @@ describe('getEvolution', () => {
   };
   
   it('should return the evolution URL for a given species', async () => {
-    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesResponse);
 
     const species = 'noodles';
     const evolutionURL = await getEvolutionURL(species);
@@ -29,7 +29,7 @@ describe('getEvolution', () => {
   });
 
   it('should make the correct call to the Pokemon API', async () => {
-    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesResponse);
 
     const species = 'pizza';
     await getEvolutionURL(species);
@@ -38,7 +38,7 @@ describe('getEvolution', () => {
   });
 
   it('should make the correct call to the Pokemon API when inputting a capitalised species', async () => {
-    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesResponse);
 
     const species = 'SPAGHETTI';
     await getEvolutionURL(species);
@@ -47,7 +47,7 @@ describe('getEvolution', () => {
   });
 
   it('should make the correct call to the Pokemon API when inputting species with spaces', async () => {
-    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesResponse);
 
     const species = ' hamburger ';
     await getEvolutionURL(species);
