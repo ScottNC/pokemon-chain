@@ -4,7 +4,7 @@ import { SpeciesData } from "../types/pokemon_types";
 
 export async function getEvolutionURL (species: string) {
   try {
-    const response: AxiosResponse = await axios.get(`${POKEMON_URL}/pokemon-species/${species.toLowerCase()}`);
+    const response: AxiosResponse = await axios.get(`${POKEMON_URL}/pokemon-species/${species.trim().toLowerCase()}`);
     const data: SpeciesData = response.data;
     return data.evolution_chain.url
   } catch (error) {

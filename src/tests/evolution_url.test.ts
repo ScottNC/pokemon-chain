@@ -42,4 +42,13 @@ describe('getEvolution', () => {
     expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/spaghetti');
   });
 
+  it('should make the correct call to the Pokemon API when inputting species with spaces', async () => {
+    (axios.get as jest.Mock).mockResolvedValue(pokemonSpeciesData);
+
+    const species = ' hamburger ';
+    await getEvolutionURL(species);
+
+    expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/hamburger');
+  });
+
 })
