@@ -8,6 +8,6 @@ export async function getEvolutionURL (species: string) {
     const data: SpeciesData = response.data;
     return data.evolution_chain.url
   } catch (error) {
-    throw new Error('Failed to fetch evolution URL');
+    throw new Error(`Species ${species} does not exist`);
   }
 }

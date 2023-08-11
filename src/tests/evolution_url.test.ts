@@ -1,11 +1,15 @@
 import { POKEMON_URL } from "../config";
 import { getEvolutionURL } from "../services/evolution_url";
 import { SpeciesData } from "../types/pokemon_types";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 jest.mock('axios');
 
 describe('getEvolution', () => {
+
+  afterEach(() => {
+    (axios.get as jest.Mock).mockReset();
+  });
 
   const pokemonSpeciesData : { data : SpeciesData } = {
     data: {
@@ -51,4 +55,10 @@ describe('getEvolution', () => {
     expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/pokemon-species/hamburger');
   });
 
-})
+  it('should error when API request fails', async () => {
+    (axios.get as jest.Mock).mockRejectedValue(new Error('Request failed'));
+    const species = 'chips';
+    await expect(getEvolutionURL(species)).rejects.toThrow('Species chips does not exist');
+  });
+  
+});
