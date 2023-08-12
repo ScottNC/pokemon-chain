@@ -63,7 +63,7 @@ describe('getChain', () => {
   }
   
   it('should return a single layered chain', async () => {
-    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue(chainResponseSingle);
 
     const species = 'banana';
@@ -73,7 +73,7 @@ describe('getChain', () => {
   });
 
   it('should return a double layered chain', async () => {
-    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue(chainResponseDouble);
 
     const species = 'apple';
@@ -83,7 +83,7 @@ describe('getChain', () => {
   });
 
   it('should return a triple layered chain', async () => {
-    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue(chainResponseTriple);
 
     const species = 'grape';
@@ -93,7 +93,7 @@ describe('getChain', () => {
   });
 
   it('should error for empty evolution data', async () => {
-    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue([]);
 
     const species = 'grape';
@@ -101,11 +101,21 @@ describe('getChain', () => {
   });
 
   it('should error when the API call to get the evolution data fails', async () => {
-    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + 'evolution-chain/12341234/');
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
     (axios.get as jest.Mock).mockResolvedValue(new Error('Request failed'));
 
     const species = 'grape';
     await expect(getChain(species)).rejects.toThrow(Error);
+  });
+
+  it('should make the same call that getEvolutionURL returned', async () => {
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/56785678/');
+    (axios.get as jest.Mock).mockResolvedValue(chainResponseSingle);
+
+    const species = 'banana';
+    await getChain(species);
+
+    expect(axios.get).toHaveBeenCalledWith(POKEMON_URL + '/evolution-chain/56785678/');
   });
 
 });
