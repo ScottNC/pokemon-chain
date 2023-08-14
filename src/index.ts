@@ -24,7 +24,11 @@ async function displayChain(species: string) {
     console.log(`Chain Processed Successfully`);
     console.log(`\n${JSON.stringify(chain, null, 2)}`);
   } catch (e) {
-    console.log(e);
+    if (e instanceof Error) {
+      console.error(e.message);
+  } else {
+      console.error(e);
+  }
   } finally {
     reader.close();
   }
