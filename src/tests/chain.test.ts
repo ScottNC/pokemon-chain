@@ -97,7 +97,7 @@ describe('getChain', () => {
     (axios.get as jest.Mock).mockResolvedValue([]);
 
     const species = 'grape';
-    await expect(getChain(species)).rejects.toThrow(Error);
+    await expect(getChain(species)).rejects.toThrow('Error: Evolution Chain is empty');
   });
 
   it('should error when the API call to get the evolution data fails', async () => {
