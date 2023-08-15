@@ -100,13 +100,13 @@ describe('getChain', () => {
     await expect(getChain(species)).rejects.toThrow('Evolution Chain is empty');
   });
 
-  // it('should error when the API call to get the evolution data fails', async () => {
-  //   (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
-  //   (axios.get as jest.Mock).mockResolvedValue({ response: {status: 404, data: 'Not Found' } });
+  it('should error when the API call to get the evolution data fails', async () => {
+    (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/12341234/');
+    (axios.get as jest.Mock).mockImplementation(() => {throw new Error('Request failed with status code 404')});
 
-  //   const species = 'grape';
-  //   await expect(getChain(species)).rejects.toThrow('Request failed with status code 404');
-  // });
+    const species = 'grape';
+    await expect(getChain(species)).rejects.toThrow('Request failed with status code 404');
+  });
 
   it('should make the same call that getEvolutionURL returned', async () => {
     (getEvolutionURL as jest.Mock).mockResolvedValue(POKEMON_URL + '/evolution-chain/56785678/');

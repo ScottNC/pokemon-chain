@@ -4,18 +4,24 @@ import { EvolutionChain, EvolutionChainResponse, EvolvesTo } from "../types/poke
 
 export async function getChain (species: string) {
   const evolutionURL: string = await getEvolutionURL(species);
-  const response: AxiosResponse = await axios.get(evolutionURL);
-  const data: EvolutionChainResponse = response.data;
+  try {
+    const response: AxiosResponse = await axios.get(evolutionURL);
+    const data: EvolutionChainResponse = response.data;
 
-  if (!data?.chain)
-    throw new Error('Evolution Chain is empty')
-    
-  const chain: EvolutionChain | null = translateChain([data.chain]);
+    if (!data?.chain)
+      throw new Error('Evolution Chain is empty')
+      
+    const chain: EvolutionChain | null = translateChain([data.chain]);
 
-  if (!chain)
-    throw new Error('Evolution Chain is empty')
-    
-  return chain;
+    if (!chain)
+      throw new Error('Evolution Chain is empty')
+      
+    return chain;
+
+  } catch (e) {
+    if (e instanceof Error) throw e;
+    else throw new Error(typeof e === 'string' ? e : 'Unknown Error');
+  }
 }
 
 function translateChain (chain: EvolvesTo[]) {
